@@ -31,6 +31,7 @@ public class conductorRest {
             conductor.setNombre(conductor.getNombre());
             conductor.setTelefono(conductor.getTelefono());
             conductor.setIdentificacion(conductor.getIdentificacion());
+            conductorService.guardarConductor(conductor);
             System.out.println("exito");
             return ResponseEntity.ok(conductor);
         } catch (Exception error) {
@@ -59,6 +60,7 @@ public class conductorRest {
 
             conductor conductor = conductorService.obtenerConductorPorId(idConductor);
             if (conductor == null) {
+                System.out.println("No existe ese conductor");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
@@ -67,10 +69,44 @@ public class conductorRest {
                 vehiculo vehiculo = vehiculoService.obtenerVehiculoPorId(idVehiculo);
                 if (vehiculo != null && !conductor.getVehiculos().contains(vehiculo)) {
                     vehiculosParaAsociar.add(vehiculo);
+                    vehiculo.setConductor(conductor);
+                    vehiculoService.guardarVehiculo(vehiculo);
                 }
             }
 
             conductor.setVehiculos(vehiculosParaAsociar);
+
+            conductorService.guardarConductor(conductor);
+            System.out.println("exito");
+            return ResponseEntity.ok(conductor);
+        } catch (Exception error) {
+            System.out.println("exito");
+            System.out.println(error.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PostMapping(value = "/desasociar-vehiculos/{idConductor}")
+    public ResponseEntity<conductor> desasociarVehiculosAConductor(@PathVariable("idConductor") Long idConductor, @RequestBody List<Long> idVehiculos) {
+        try {
+
+            conductor conductor = conductorService.obtenerConductorPorId(idConductor);
+            if (conductor == null) {
+                System.out.println("No existe ese conductor");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            List<vehiculo> vehiculosParaDesasociar = conductor.getVehiculos();
+            for (Long idVehiculo : idVehiculos) {
+                vehiculo vehiculo = vehiculoService.obtenerVehiculoPorId(idVehiculo);
+                if (vehiculo != null && conductor.getVehiculos().contains(vehiculo)) {
+                    vehiculosParaDesasociar.remove(vehiculo);
+                    vehiculo.setConductor(null);
+                    vehiculoService.guardarVehiculo(vehiculo);
+                }
+            }
+
+            conductor.setVehiculos(vehiculosParaDesasociar);
 
             conductorService.guardarConductor(conductor);
             System.out.println("exito");

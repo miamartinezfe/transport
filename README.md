@@ -18,5 +18,4 @@ previamente para quitar la asociación.
 - **Spring Boot:** Framework de desarrollo de aplicaciones Java.
 - **Hibernate:** Framework de mapeo objeto-relacional (ORM).
 - **MySQL:** Sistema de gestión de bases de datos utilizado.
-- Otros frameworks o tecnologías utilizados en tu proyecto.
 

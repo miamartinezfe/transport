@@ -1,5 +1,6 @@
 package com.transporte.app.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -30,8 +31,10 @@ public class conductor {
     @NotNull
     @Column(length = 50)
     private String direccion;
+    @JsonIgnore
     @OneToMany(mappedBy = "conductor", cascade = CascadeType.ALL)
     private List<pedidos> listaPedidos;
+    @JsonIgnore
     @OneToMany(mappedBy = "conductor", cascade = CascadeType.ALL)
     private List<vehiculo> vehiculos;
 }

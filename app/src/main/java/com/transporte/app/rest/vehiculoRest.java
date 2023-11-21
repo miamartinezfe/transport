@@ -70,4 +70,23 @@ public class vehiculoRest {
         }
 
     }
+
+    @GetMapping(value = "/asignados/{idConductor}")
+    public ResponseEntity<List<Integer>> vehiculosConductor(@PathVariable("idConductor") Integer idConductor) throws Exception {
+
+        try {
+            List<vehiculo> vehiculos = vehiculoService.obtenerVehiculos();
+            List<Integer> vehiculosAsignados = new ArrayList<>();
+            for (vehiculo vehiculo: vehiculos){
+                if (vehiculo.getConductor() != null && vehiculo.getConductor().getId() == idConductor){
+                    vehiculosAsignados.add(vehiculo.getId());
+                }
+            }
+            return ResponseEntity.ok(vehiculosAsignados);
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+    }
 }
